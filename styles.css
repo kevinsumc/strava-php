@@ -1,0 +1,169 @@
+/* Estilos base */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+/* Botones */
+.strava-button {
+    display: inline-block;
+    background-color: #FC4C02;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.strava-button:hover {
+    background-color: #e04303;
+}
+
+.analyze-btn {
+    background-color: #4285F4;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 20px 0;
+    transition: background-color 0.3s;
+}
+
+.analyze-btn:hover {
+    background-color: #3367D6;
+}
+
+/* Tabla de actividades */
+#activitiesTable {
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+#activitiesTable table {
+    width: 10%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.9em;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+#activitiesTable th {
+    background-color: #FC4C02;
+    color: white;
+    text-align: left;
+    padding: 12px 15px;
+}
+
+#activitiesTable td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #dddddd;
+}
+
+#activitiesTable tr:nth-child(even) {
+    background-color: #f8f8f8;
+}
+
+#activitiesTable tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Gráficos */
+.charts-container {
+    margin-top: 30px;
+    display: none;
+}
+
+.chart-section {
+    margin-bottom: 40px;
+}
+
+.chart-section h2 {
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #FC4C02;
+}
+
+.chart-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.chart-container {
+    flex: 1;
+    min-width: 200px; /* Reducido de 300px */
+    max-width: 400px; /* Puedes limitar el ancho máximo si deseas */
+    height: 250px;     /* Establece una altura más baja para el gráfico */
+    padding: 10px;     /* Menos padding para ahorrar espacio */
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Mensajes de error */
+.error {
+    color: #d32f2f;
+    background-color: #ffebee;
+    padding: 15px;
+    border-radius: 6px;
+    margin: 20px 0;
+    border-left: 4px solid #d32f2f;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .chart-row {
+        flex-direction: column;
+    }
+    
+    .chart-container {
+        min-width: 100%;
+    }
+    
+    #activitiesTable table {
+        font-size: 0.8em;
+    }
+}
+.intro-message {
+    background-color: #f0f4f8;
+    border-left: 6px solid #fc4c02;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    color: #333;
+}
+
+.intro-message h2 {
+    margin-top: 0;
+    color: #fc4c02;
+}
+
+.intro-message p {
+    margin: 10px 0;
+    line-height: 1.6;
+}

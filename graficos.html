@@ -1,0 +1,45 @@
+<!-- graficos.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gráficos de Actividad</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Gráficos de Actividad</h1>
+        <div class="chart-container">
+            <canvas id="distanceChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const stats = JSON.parse(localStorage.getItem('stravaStats'));
+
+        if (!stats) {
+            document.body.innerHTML = '<p class="error">No hay datos disponibles para mostrar.</p>';
+        } else {
+            const ctx = document.getElementById('distanceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Correr', 'Bicicleta', 'Natación'],
+                    datasets: [{
+                        label: 'Distancia (km)',
+                        data: [stats.totalDistance.runs, stats.totalDistance.rides, stats.totalDistance.swims],
+                        backgroundColor: ['#FF6384', '#36A2EB', '#4BC0C0']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: true }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
