@@ -31,6 +31,7 @@ class ActivityDisplay {
                 <th>Fecha</th>
                 <th>Distancia</th>
                 <th>Tiempo</th>
+                <th>Frecuencia Cardiaca</th>        
                 <th>Elevación</th>
             </tr>
         </thead>
@@ -53,6 +54,7 @@ class ActivityDisplay {
             <td>{$date->format('d/m/Y H:i')}</td>
             <td>" . number_format($activity['distance'] / 1000, 2) . " km</td>
             <td>{$this->formatTime($activity['moving_time'])}</td>
+            <td>" . (isset($activity['average_heartrate']) ? number_format($activity['average_heartrate'], 1) . ' bpm' : 'N/A') . "</td>
             <td>{$activity['total_elevation_gain']} m</td>
         </tr>";
     }

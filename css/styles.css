@@ -20,7 +20,7 @@ body {
 /* Botones */
 .strava-button {
     display: inline-block;
-    background-color: #FC4C02;
+    background-color: #0c17b3;
     color: white;
     padding: 12px 24px;
     border-radius: 6px;
@@ -33,7 +33,7 @@ body {
 }
 
 .strava-button:hover {
-    background-color: #e04303;
+    background-color: #0c17b3;
 }
 
 .analyze-btn {
@@ -151,7 +151,7 @@ body {
 }
 .intro-message {
     background-color: #f0f4f8;
-    border-left: 6px solid #fc4c02;
+    border-left: 6px solid #0c17b3;
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 8px;
@@ -160,10 +160,85 @@ body {
 
 .intro-message h2 {
     margin-top: 0;
-    color: #fc4c02;
+    color: #0c17b3;
 }
 
 .intro-message p {
     margin: 10px 0;
     line-height: 1.6;
 }
+/* Encabezado */
+.main-header {
+    background-color: #0c17b3;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    height: 50px;
+}
+
+.platform-name {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+/* Footer */
+.main-footer {
+    background-color: #f2f2f2;
+    text-align: center;
+    padding: 15px;
+    margin-top: 40px;
+    border-top: 1px solid #ccc;
+    color: #555;
+    font-size: 0.9rem;
+}
+#chartsContainer {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+canvas {
+    max-width: 100%;
+    background: #fff;
+    border-radius: 8px;
+    padding: 10px;
+}
+.grafico-container {
+    margin: 40px 0;
+}
+.grafico-texto {
+    background: #f4f4f4;
+    padding: 15px;
+    border-left: 4px solid #007bff;
+    margin-bottom: 10px;
+}
+canvas {
+    margin-bottom: 40px;}
+    .btn-volver {
+        background-color: #4285F4;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        margin: 20px 0;
+        transition: background-color 0.3s;
+      }
+      
+      .btn-volver:hover {
+        background-color: #4285F4; /* tono más oscuro al pasar el mouse */
+      }
+      

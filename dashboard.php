@@ -19,7 +19,7 @@ if (isset($_GET['connect'])) {
     header("Location: " . $stravaAuth->getAuthUrl());
     exit;
 }
-    
+
 // Verificar y refrescar token si es necesario
 if (isset($_SESSION['strava_token'])) {
     // Si el token está expirado, intentar refrescar
@@ -29,7 +29,7 @@ if (isset($_SESSION['strava_token'])) {
             $STRAVA_CLIENT_SECRET,
             $_SESSION['strava_refresh_token']
         );
-        
+
         if ($newToken && isset($newToken['access_token'])) {
             $_SESSION['strava_token'] = $newToken['access_token'];
             $_SESSION['strava_refresh_token'] = $newToken['refresh_token'];
@@ -61,93 +61,52 @@ if (isset($_SESSION['strava_token'])) {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Strava</title>
-   <link rel="stylesheet" href="styles.css">
-    <!-- Carga   Chart.js solo una vez -->
+    <title>Dashboard Strava - KS Running</title>
+    <link rel="stylesheet" href="css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 </head>
 <body>
+    <header class="main-header">
+        <div class="header-content">
+            <img src="images/KS.2.PNG" alt="Logo KS Running" class="logo">
+            <h1 class="platform-name">KS Running</h1>
+        </div>
+    </header>
+
     <div class="container">
-    <?php if (!isset($_SESSION['strava_token'])): ?>
-        <h2>Bienvenido a tu Plataforma de Análisis de Entrenamientos</h2>
+        <?php if (!isset($_SESSION['strava_token'])): ?>
+            <h2>Bienvenido a tu Plataforma de Análisis de Entrenamientos</h2>
             <a href="?connect=true" class="strava-button">Conectar con Strava</a>
-            <div class="intro-message">
-
-    <p>
-        Esta plataforma está diseñada para ayudarte a comprender y optimizar tu rendimiento deportivo.
-        A través de la conexión con la <strong>API de Strava</strong>, accedemos a tus datos de entrenamiento de forma automática y segura.
-    </p>
-    <p>
-        Podrás visualizar métricas clave como <strong>distancia, tiempo, velocidad promedio y frecuencia cardíaca</strong> directamente en tu panel.
-        Además, dispones de herramientas para <strong>analizar tus actividades</strong> y generar reportes detallados que te ayudarán a evaluar tu progreso a lo largo del tiempo.
-    </p>
-    <p>
-        Explora tus datos, identifica patrones y lleva tu entrenamiento al siguiente nivel.
-    </p>
-</div>
-
-            <?php if (isset($error)): ?>
-                <p class="error"><?= htmlspecialchars($error) ?></p>
-            <?php endif; ?>
+            <!-- Mensaje de introducción -->
         <?php else: ?>
-            <h1>Mis Actividades de Strava</h1>
-            <button id="analyzeBtn" class="analyze-btn">Analizar Datos</button>
-            
+            <h2>Mis Actividades de Strava</h2>
+            <a href="graficos.php" class="analyze-btn">Analizar Datos</a>
+
+<!-- Contenedor para los gráficos -->
+<div id="chartsContainer" style="display:none;">
+    <canvas id="chartDistanceOverTime"></canvas>
+    <canvas id="chartHeartRateVsDistance"></canvas>
+    <canvas id="chartElevationVsDistance"></canvas>
+    <canvas id="chartTrainingTime"></canvas>
+    <canvas id="chartRadarSessions"></canvas>
+    <canvas id="chartHeartZones"></canvas>
 </div>
 
-
-            
             <div id="activitiesTable">
                 <?= $activityDisplay->displayActivities($activities) ?>
             </div>
-            
-            <div id="chartsContainer" class="charts-container" style="display: none;"></div>
-            
-            <script>
-                // Versión corregida de processActivitiesData
-                function processActivitiesData(activities) {
-                    const safeFilter = (type) => activities ? activities.filter(a => a && a.type === type) || [] : [];
-                    const sumDistance = (arr) => arr.reduce((sum, a) => sum + (parseFloat(a.distance) || 0), 0);
-                    
-                    return {
-                        runs: safeFilter('Run'),
-                        rides: safeFilter('Ride'),
-                        swims: safeFilter('Swim'),
-                        totalDistance: {
-                            runs: sumDistance(safeFilter('Run')) / 1000,
-                            rides: sumDistance(safeFilter('Ride')) / 1000,
-                            swims: sumDistance(safeFilter('Swim')) / 1000
-                        }
-                    };
-                }
-
-                // Carga inicial de datos
-                window.stravaData = {
-                    activities: <?= json_encode($activities ?? []) ?>,
-                    ready: false    
-                };
-                
-                if (window.stravaData.activities && window.stravaData.activities.length > 0) {
-                    window.stravaData.ready = true;
-                    window.stravaData.stats = processActivitiesData(window.stravaData.activities);
-                    console.log('Datos de Strava cargados:', window.stravaData);
-                } else {
-                    console.warn('No hay actividades disponibles');
-                    document.getElementById('analyzeBtn').disabled = true;
-                }
-            </script>
-            
-            
-            <script src="charts.js"></script>
-            <script src="main.js"></script>
         <?php endif; ?>
     </div>
+
+    <footer class="main-footer">
+        <p>&copy; <?= date("Y") ?> KS Running. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="main.js"></script>
 </body>
 </html>

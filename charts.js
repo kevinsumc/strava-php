@@ -1,211 +1,108 @@
-Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
-Chart.defaults.plugins.legend.position = 'bottom';
+document.addEventListener('DOMContentLoaded', function() {
+    const stats = JSON.parse(localStorage.getItem('stravaStats'));
 
-// 1. Primero definimos todas las funciones auxiliares
-function createDistanceChart(container, stats) {
-    const canvas = document.createElement('canvas');
-    canvas.height = 300;
-    container.appendChild(canvas);
-    
-    new Chart(canvas, {
+    if (!stats) {
+        document.body.innerHTML = '<p class="error">No hay datos disponibles para mostrar.</p>';
+        return;
+    }
+
+    // 1. Gráfico de Distancia
+    const ctxDistance = document.getElementById('distanceChart').getContext('2d');
+    new Chart(ctxDistance, {
         type: 'bar',
         data: {
-            labels: ['Carreras', 'Ciclismo', 'Natación'],
+            labels: ['Correr', 'Bicicleta', 'Natación'],
             datasets: [{
                 label: 'Distancia (km)',
-                data: [
-                    stats.totalDistance.runs || 0,
-                    stats.totalDistance.rides || 0,
-                    stats.totalDistance.swims || 0
-                ],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.7)',
-                    'rgba(54, 162, 235, 0.7)',
-                    'rgba(255, 206, 86, 0.7)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)'
-                ],
-                borderWidth: 1
+                data: [stats.totalDistance.runs, stats.totalDistance.rides, stats.totalDistance.swims],
+                backgroundColor: ['#FF6384', '#36A2EB', '#4BC0C0']
             }]
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Distancia por Tipo de Actividad',
-                    font: { size: 16 }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Kilómetros'
-                    }
-                }
-            }
-        }
+        options: { responsive: true }
     });
-}
-function renderAllCharts() {
-    const container = document.getElementById('chartsContainer');
-    if (!container) {
-        console.error('Contenedor de gráficos no encontrado');
-        return;
-    }
 
-    container.innerHTML = '';
-    
-    if (!window.stravaData || !window.stravaData.ready || !window.stravaData.stats) {
-        container.innerHTML = '<div class="error">Datos no disponibles</div>';
-        container.style.display = 'block';
-        return;
-    }
-
-    try {
-        const runs = window.stravaData.stats.runs;
-        
-        // 1. Gráfico de distancias de carreras (existente)
-        createDistanceChart(container, window.stravaData.stats);
-            
-        // 2. Gráfico de progresión de distancia
-        createDistanceProgressionChart(container, runs);
-        
-        // 3. Gráfico de correlación distancia-duración
-        createDistanceDurationChart(container, runs);
-
-    } catch (error) {
-        console.error('Error en renderAllCharts:', error);
-        container.innerHTML = `<div class="error">Error al generar gráficos: ${error.message}</div>`;
-    }
-}
-
-// [El código existente de createDistanceChart permanece igual]
-
-function createDistanceProgressionChart(container, runs) {
-    if (!runs || runs.length === 0) return;
-    
-    const canvas = document.createElement('canvas');
-    canvas.height = 300;
-    container.appendChild(canvas);
-    
-    // Ordenar carreras por fecha
-    const sortedRuns = [...runs].sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
-    
-    const distanceData = sortedRuns.map(run => (run.distance / 1000).toFixed(2));
-    const labels = sortedRuns.map(run => new Date(run.start_date).toLocaleDateString());
-    
-    new Chart(canvas, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Distancia (km)',
-                data: distanceData,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 2,
-                tension: 0.1,
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Progresión de Distancia en Carreras',
-                    font: { size: 16 }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return `${context.dataset.label}: ${context.raw} km`;
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Kilómetros'
-                    }
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Fecha de la carrera'
-                    }
-                }
-            }
-        }
-    });
-}
-
-function createDistanceDurationChart(container, runs) {
-    if (!runs || runs.length === 0) return;
-    
-    const canvas = document.createElement('canvas');
-    canvas.height = 300;
-    container.appendChild(canvas);
-    
-    const data = runs.map(run => ({
-        x: run.distance / 1000, // km
-        y: run.moving_time / 60 // minutos
-    }));
-    
-    new Chart(canvas, {
+    // 2. Gráfico de Frecuencia Cardíaca vs Distancia
+    const ctxHR = document.getElementById('heartRateChart').getContext('2d');
+    new Chart(ctxHR, {
         type: 'scatter',
         data: {
             datasets: [{
-                label: 'Carreras',
-                data: data,
-                backgroundColor: 'rgba(153, 102, 255, 0.7)',
-                borderColor: 'rgba(153, 102, 255, 1)',
-                borderWidth: 1,
-                pointRadius: 6
+                label: 'FC vs Distancia',
+                data: stats.sessions.map(s => ({ x: s.distance, y: s.avgHeartRate })),
+                backgroundColor: '#FF9F40'
             }]
         },
         options: {
-            responsive: true,
             plugins: {
-                title: {
-                    display: true,
-                    text: 'Relación Distancia-Duración',
-                    font: { size: 16 }
-                },
                 tooltip: {
                     callbacks: {
-                        label: function(context) {
-                            return `Distancia: ${context.parsed.x.toFixed(2)} km\nDuración: ${context.parsed.y.toFixed(1)} min`;
+                        label: function (ctx) {
+                            return `Distancia: ${ctx.raw.x} km, FC: ${ctx.raw.y} bpm`;
                         }
                     }
                 }
             },
             scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Distancia (km)'
-                    },
-                    beginAtZero: true
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Duración (minutos)'
-                    },
-                    beginAtZero: true
-                }
+                x: { title: { display: true, text: 'Distancia (km)' } },
+                y: { title: { display: true, text: 'FC Promedio (bpm)' } }
             }
         }
     });
-}
+
+    // 3. Gráfico de Elevación por Sesión
+    const ctxElevation = document.getElementById('elevationChart').getContext('2d');
+    new Chart(ctxElevation, {
+        type: 'bar',
+        data: {
+            labels: stats.sessions.map(s => s.date),
+            datasets: [{
+                label: 'Elevación (m)',
+                data: stats.sessions.map(s => s.elevationGain),
+                backgroundColor: '#9966FF'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: { title: { display: true, text: 'Sesión' } },
+                y: { title: { display: true, text: 'Elevación (m)' } }
+            }
+        }
+    });
+
+    // 4. Gráfico de Tiempo Total Semanal
+    const ctxTime = document.getElementById('timeChart').getContext('2d');
+    new Chart(ctxTime, {
+        type: 'line',
+        data: {
+            labels: stats.weeks.map(w => w.weekLabel),
+            datasets: [{
+                label: 'Tiempo total (min)',
+                data: stats.weeks.map(w => w.totalMinutes),
+                borderColor: '#4BC0C0',
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { title: { display: true, text: 'Minutos' } }
+            }
+        }
+    });
+
+    // 5. Gráfico de Zonas de Frecuencia Cardíaca
+    const ctxZones = document.getElementById('zonesChart').getContext('2d');
+    new Chart(ctxZones, {
+        type: 'doughnut',
+        data: {
+            labels: ['Z1', 'Z2', 'Z3', 'Z4', 'Z5'],
+            datasets: [{
+                label: 'Distribución de Zonas FC',
+                data: stats.heartRateZones || [10, 40, 30, 15, 5],
+                backgroundColor: ['#C0C0C0', '#8BC34A', '#FFEB3B', '#FF9800', '#F44336']
+            }]
+        },
+        options: { responsive: true }
+    });
+});

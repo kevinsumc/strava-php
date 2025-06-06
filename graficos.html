@@ -1,45 +1,35 @@
-<!-- graficos.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Gráficos de Actividad</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráficos de Actividades - KS Running</title>
+    <link rel="stylesheet" href="css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+    <header class="main-header">
+        <div class="header-content">
+            <img src="images/KS.2.PNG" alt="Logo KS Running" class="logo">
+            <h1 class="platform-name">KS Running - Gráficos</h1>
+        </div>
+    </header>
+
     <div class="container">
-        <h1>Gráficos de Actividad</h1>
-        <div class="chart-container">
+        <h2>Visualización de Datos de Entrenamiento</h2>
+        <div class="charts-container">
             <canvas id="distanceChart"></canvas>
+            <canvas id="heartRateChart"></canvas>
+            <canvas id="elevationChart"></canvas>
+            <canvas id="timeChart"></canvas>
+            <canvas id="zonesChart"></canvas>
         </div>
     </div>
 
-    <script>
-        const stats = JSON.parse(localStorage.getItem('stravaStats'));
+    <footer class="main-footer">
+        <p>&copy; 2025 KS Running. Todos los derechos reservados.</p>
+    </footer>
 
-        if (!stats) {
-            document.body.innerHTML = '<p class="error">No hay datos disponibles para mostrar.</p>';
-        } else {
-            const ctx = document.getElementById('distanceChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Correr', 'Bicicleta', 'Natación'],
-                    datasets: [{
-                        label: 'Distancia (km)',
-                        data: [stats.totalDistance.runs, stats.totalDistance.rides, stats.totalDistance.swims],
-                        backgroundColor: ['#FF6384', '#36A2EB', '#4BC0C0']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: true }
-                    }
-                }
-            });
-        }
-    </script>
+    <script src="charts.js"></script>
 </body>
 </html>
